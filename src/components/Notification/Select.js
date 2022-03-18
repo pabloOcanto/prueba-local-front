@@ -5,9 +5,9 @@ import renderError from './renderError';
 import {ErrorMessage} from 'formik';
 
 
-const Select_ =({props,id,value,elements})=>(
+const Select_ =({text,props,id,value,elements})=>(
     <>
-    <label>{id} :</label>
+    <label style={{color:'#9F9F9F'}}>{text} :</label>
     <Select 
     id ={id}
     name={id}

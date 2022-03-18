@@ -1,18 +1,21 @@
 import styled from 'styled-components';
+import backgroundImg from '../../assets/loginBackground.jpg'
 
-
-export const Input = styled.input`
-  padding: 0.5em;
+export const Input = styled.input.attrs({
+  placeHolderColor: "red"
+})`
+  padding: .5em;
   border-radius: 3px;
-  border: 1px dotted #000000;
-  border-color: #3581fc;
-
+  border: 1px solid #9F9F9F;
+  border-color: #9F9F9F;
+  color:#9F9F9F;
   width: 100%;
   background: white;
-  color: blue;
-  padding-left: 5px;
-  font-size: 10px;
-  margin-left: 10px;
+  font-size: 16px;
+
+  ::placeholder{
+    font-style:italic
+  }
 `;
 
 export const Img = styled.img`
@@ -30,17 +33,25 @@ export const Button = styled.button`
   /* This renders the buttons above... Edit me! */
   display: inline-block;
   border-radius: 3px;
-  margin-left: 1rem;
   width: 100%;
-  background: blue;
+  background: ${props => props.color ? props.color : 'blue'} ;
   border: 2px hidden white;
+  padding:1em;
+  color: white
 `;
 
-export const Div = styled.div`
-    padding: 2em;
-    border: 1px dotted #000000;
-    border-color: #3581fc;
+// export const Div = styled.div`
+//     padding: 2em;
+//     border: 1px dotted #000000;
+//     border-color: #3581fc;
     
+// `;
+export const Div = styled.div`
+border-color: #9F9F9F;
+border-radius: 5px;
+padding: 2em;
+margin-top:2em;
+background-color: #F2F2F2;
 `;
 
 export const Error = styled.p`
@@ -48,15 +59,15 @@ export const Error = styled.p`
 `;
 
 export const Select = styled.select`
+padding:.26em;
 width: 100%;
 background: white;
 color: gray;
 padding-left: 5px;
 font-size: 20px;
 border-radius: 3px;
-border: 1px dotted #000000;
-border-color: #3581fc;
-margin-left: 10px;
+border: 1px solid #000000;
+border-color: #9F9F9F;
 
      option {
        color: black;

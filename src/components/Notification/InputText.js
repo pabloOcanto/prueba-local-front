@@ -5,9 +5,9 @@ import renderError from './renderError';
 import {ErrorMessage} from 'formik';
 
 
-const InputText =({id,props,value})=>(
+const InputText =({placeholder,text,id,props,value})=>(
     <>
-    <label>{id} :</label>
+    <label style={{color:'#9F9F9F'}} >{text} :</label>
     <Input 
     id ={id}
     type="text" 
@@ -15,6 +15,8 @@ const InputText =({id,props,value})=>(
     onChange={props.handleChange} 
     onBlur={props.handleBlur} 
     value={value} 
+    placeholder={placeholder}
+    
     /><br/>
   <ErrorMessage name={id} render={renderError}/>
   </>  

@@ -13,14 +13,14 @@ const Index =()=>{
     }
 
     return (
-        <>
+        <div className=''>
         <div className="row">
         <Search inputHandler={inputHandler} />
         </div>
         <div className='row'>
         <Filter input={inputText} rows={20} />
         </div>
-        </>
+        </div>
     )
 }
 

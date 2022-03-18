@@ -4,9 +4,9 @@ const Button = ({addArea,props})=>(
     <>
     <button
     type="button"
-    className="btn btn-primary text-center"
+    className="btn btn-primary text-center px-4"
     onClick={addArea}
-    >add
+    >Add
     <i className="fa fa-plus-circle" aria-hidden="true" />
     </button >
     

@@ -4,13 +4,15 @@ import styled from 'styled-components';
 
 
 export const TextField = styled.input`
-  padding: 0.5em;
-  margin: 0.5em;
-  width: 100%;
-  color: ${props => props.inputColor || "palevioletred"};
-  background: papayawhip;
-  border: none;
-  border-radius: 3px;
+margin: 1em 0;
+padding: .5em;
+border-radius: 3px;
+border: 1px solid #9F9F9F;
+border-color: #9F9F9F;
+color:#9F9F9F;
+width: 100%;
+background: white;
+font-size: 16px;
 `;
 
 const Index = ({inputHandler})=>{
