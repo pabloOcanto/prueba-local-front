@@ -37,6 +37,8 @@
     position: fixed;
     left: -100%;
     top: 0;
+    z-index: 2;
+    transition: 600ms;
 }
 
 .nav-menu.active{
@@ -85,7 +87,30 @@
 span{
     margin-left: 16px;
 }
-.word-break::after{
-    content: "\a";
-    white-space: pre;
+.display-mobile{
+    display: none;
+}
+.active-menu{
+    background-color: #326084;
+}
+
+
+@media only screen and (max-width: 1023px) {
+    .menu-bars{
+        margin: 0;
+    }
+    .navbar{
+        justify-content: center;
+      
+    }
+    .hide-mobile{
+        display: none;
+    }
+    .display-mobile{
+        display:block;
+        background-color: #11A2D7;
+    }
+    .display-mobile:hover{
+    background-color: #11A2D7;
+    }
 }

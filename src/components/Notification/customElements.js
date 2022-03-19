@@ -51,7 +51,9 @@ border-color: #9F9F9F;
 border-radius: 5px;
 padding: 2em;
 margin-top:2em;
-background-color: #F2F2F2;
+@media (max-width: 768px) {
+ padding:0;
+}
 `;
 
 export const Error = styled.p`

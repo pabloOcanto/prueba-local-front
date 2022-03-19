@@ -8,10 +8,13 @@ import Header from '../../components/Header'
 
 
 const Center = styled.div`
-    margin-left:20%;
+    margin-left:15%;
     margin-right:10%;
     width: 100%;
-   
+    @media (max-width: 768px) {
+      margin-left:0;
+      margin.right:0;
+    }
     
 `;
 
@@ -30,13 +33,11 @@ background-color:#FAFAFA
 
 const Index = ()=>{
     return (
-    <Div className='container-fluid'>
+    <Div className='container-fluid p-0'>
       {/* <Menu className='col-3'/>
       <Header /> */}
-        <ContentWrap>
-         
-            
-            <Center className='col-9'>
+        <ContentWrap> 
+          <Center className='col-12 col-md-9'>
               <Notification />
             </Center>
          

@@ -4,7 +4,7 @@ import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from "react-icons/io";
 import * as BiIcons from "react-icons/bi";
 import * as MdIcons from "react-icons/md";
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import './Navbar.css';
 
 import alertaTitle from '../../assets/alertaTitle.png'
@@ -13,6 +13,7 @@ import { CgMenuGridR } from "react-icons/cg";
 import { FaUserAlt } from 'react-icons/fa';
 
 
+const isMobile = window.innerWidth <= 1023;
 const data = {
     firstName: 'Nicole',
     lastName: 'Parker',
@@ -20,6 +21,7 @@ const data = {
 }
 
 const Navbar = () => {
+    let location = useLocation();
 const[sidebar, setSidebar] = useState(false);
 const[notificationMenu, setNotificationMenu] = useState(false);
 const showSidebar = () => setSidebar(!sidebar);
@@ -28,24 +30,25 @@ const showNotificationMenu  = ()=> setNotificationMenu(!notificationMenu);
    <>
             <div className='navbar'>
             <div className='row w-100'>
-                <Link to='#' className='menu-bars'>
-                    <FaIcons.FaBars onClick={showSidebar} />
-                </Link>
-              
-                   <div className='col-2'> <img className='header-img-size' src={alertaTitle}></img></div>
-                    <div className='col-9 text-right ml-4 f-flex d-none d-lg-block'>
+                    <div className='col'>
+                        <Link to='#' className='menu-bars'>
+                            {
+                                !isMobile ? <FaIcons.FaBars /> :
+                                    !sidebar ? <FaIcons.FaBars onClick={showSidebar} /> : <AiIcons.AiOutlineClose onClick={showSidebar} />}
+                        </Link>
+
+                        <img className='header-img-size' src={alertaTitle}></img>
+                    </div>
+                    <div className='col text-right ml-4 p-0'>
                     <MdIcons.MdOutlineNotificationAdd className='header-icon mt-2' />
                     <CgMenuGridR className='header-icon mt-2 ml-4' />
-                    <span> <FaUserAlt className='header-icon-image ' /> </span>
-               
-                         
-                     <span className='word-break' > {data.firstName +' '+ data.lastName}</span>
-                   
+                    <span> <FaUserAlt className='header-icon-image hide-mobile ' /> </span>
+                     <span className='hide-mobile' > {data.firstName +' '+ data.lastName}</span>
                     </div> 
                 </div>
             </div>
 
-            <nav className={window.innerWidth > 1023 ? 'nav-menu active' : sidebar ? 'nav-menu active' : 'nav-menu'}>
+            <nav className={!isMobile ? 'nav-menu active' : sidebar ? 'nav-menu active' : 'nav-menu'} >
                 <ul className='nav-menu-items'>
                     <li className='navbar-toggle'>
                         <Link to='#' className='menu-bars'>
@@ -53,7 +56,14 @@ const showNotificationMenu  = ()=> setNotificationMenu(!notificationMenu);
                         </Link>
 
                     </li>
-                    <li className='nav-text'>
+                    <li className='nav-text sub-menu display-mobile'>
+                        <Link to='#' className='menu-bars sub-menu' >
+                            <FaUserAlt/>
+                           
+                     <span > {data.firstName +' '+ data.lastName}</span>
+                        </Link>
+                    </li>
+                    <li className= {`nav-text ${location.pathname == '/home' ?'active-menu':'' }`}>
                         <Link to='/home' className='menu-bars'>
                             <AiIcons.AiFillHome />
                             <span>Home</span>
@@ -69,13 +79,14 @@ const showNotificationMenu  = ()=> setNotificationMenu(!notificationMenu);
                    {
                        notificationMenu &&
                    <>
-                        <li className={notificationMenu ? 'nav-text sub-menu' : 'nav-text sub-menu-display'}>
+                   
+                        <li className={`nav-text ${notificationMenu ? 'sub-menu' : 'sub-menu-display'} ${location.pathname == '/notification/create' ?'active-menu':'' }`}>
                             <Link to='/notification/create' className=' sub-menu-p menu-bars'>
                                 <AiIcons.AiOutlineEdit />
                                 <span>Crear</span>
                             </Link>
                         </li>
-                        <li className={notificationMenu ? 'nav-text sub-menu' : 'av-text sub-menu-display'}>
+                        <li className={`nav-text ${notificationMenu ? 'sub-menu' : 'sub-menu-display'} ${location.pathname == '/notification/list' ?'active-menu':'' }`}>
                             <Link to='/notification/list' className='sub-menu-p menu-bars'>
                                 <AiIcons.AiOutlineUnorderedList />
                                 <span>Listar</span>
@@ -83,12 +94,15 @@ const showNotificationMenu  = ()=> setNotificationMenu(!notificationMenu);
                         </li>
                         </>
                     }
-                        <li className='nav-text sub-menu'>
+                    
+                    <li className='nav-text sub-menu'>
                         <Link to='#' className='menu-bars sub-menu' onClick={showNotificationMenu}>
                             <BiIcons.BiLogOutCircle />
                             <span>Salir</span>
                         </Link>
                     </li>
+                 
+                    
                  
                     
                 </ul>

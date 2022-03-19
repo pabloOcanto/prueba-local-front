@@ -185,5 +185,11 @@
     .text-align-card{
         text-align:start;
     }
-   
+   .carousel .slide{
+       text-align: center;
+   }
+   .header-img-size{
+    width: 7em;
+    height: 3em;
+}
 }

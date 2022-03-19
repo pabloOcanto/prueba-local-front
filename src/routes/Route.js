@@ -12,7 +12,28 @@ function Routes() {
     <Context.Consumer>
         {context => (
       <BrowserRouter>
-       {context.isLogged && <Navbar/> }
+          {true && <Navbar/> }
+
+<Switch>
+  {!true && <Route exact path="/" component={Login}/> } 
+  {true ?
+    <Route exact path="/notification/create" component={Notification}/>
+    :
+    <Redirect to="/"/>
+  }
+  {true ?
+    <Route exact path="/home" component={HomePage}/>
+    :
+    <Redirect to="/"/>
+  }
+
+  {true ?
+    <Route exact path="/notification/list" component={NotificationsPage}/>
+    :
+    <Redirect to="/"/>
+  }                
+</Switch>
+       {/* {context.isLogged && <Navbar/> }
 
         <Switch>
           {!context.isLogged && <Route exact path="/" component={Login}/> } 
@@ -32,7 +53,7 @@ function Routes() {
             :
             <Redirect to="/"/>
           }                
-        </Switch>
+        </Switch> */}
       </BrowserRouter>
     )}
     </Context.Consumer>
