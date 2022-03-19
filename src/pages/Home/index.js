@@ -47,8 +47,8 @@ const Index = () => {
     return (
         <>
             <Div className='container-fluid pr-0 pl-0'>
-                <Menu className='col-3' />
-                <Header />
+                {/* <Menu className='col-3' /> */}
+                {/* <Header /> */}
                 <ContentWrap>
                     <Center className='col-9'>
                         <Home />

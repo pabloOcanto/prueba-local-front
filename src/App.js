@@ -5,9 +5,11 @@ import AuthProvider from './context/AuthProvider';
 
 const App =()=> {
   return (
+    <>
     <AuthProvider>
     <Routes/>
     </AuthProvider>
+    </>
   );
 }
 

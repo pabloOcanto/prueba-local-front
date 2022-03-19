@@ -5,12 +5,15 @@ import HomePage from '../pages/Home'
 import Notification from '../pages/Notification'
 import NotificationsPage from '../pages/Notifications'
 import Context from '../context/Context';
+import Navbar from '../components/NavBar/Navbar';
 
 function Routes() {
   return (
     <Context.Consumer>
         {context => (
       <BrowserRouter>
+       {context.isLogged && <Navbar/> }
+
         <Switch>
           {!context.isLogged && <Route exact path="/" component={Login}/> } 
           {context.isLogged ?

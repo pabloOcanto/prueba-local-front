@@ -31,8 +31,8 @@ background-color:#FAFAFA
 const Index = ()=>{
     return (
     <Div className='container-fluid'>
-      <Menu className='col-3'/>
-      <Header />
+      {/* <Menu className='col-3'/>
+      <Header /> */}
         <ContentWrap>
          
             

@@ -25,28 +25,22 @@ background-color:#FAFAFA
 
 `;
 
-const Index = ()=>{
+const Index = () => {
 
     return (
         <Div className='container-fluid pl-0 pr-0'>
-            <Menu className='col-3' />
-                <Header />
             <ContentWrap>
-              
-                    
-                    <Center className='col-12'>
-                        <h1 className='text-center notificacion-title'>Notificaciones</h1>
-                        <Notifications />
-
-                    </Center>
-               
+                <Center className='col-12'>
+                    <h1 className='text-center notificacion-title'>Notificaciones</h1>
+                    <Notifications />
+                </Center>
             </ContentWrap>
-
             <Footer />
 
         </Div>
 
-)}
+    )
+}
 
 
 export default Index;
