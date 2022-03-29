@@ -12,9 +12,11 @@ import LoadService from '../../service/LoadService';
 import NotifcationService from '../../service/NotificationService';
 import NotificationGenerator from '../../utils/NotificationGenerator';
 import Regions from './Regions';
+import notificationGenerator from '../../utils/NotificationGenerator';
 
 
-const NotificationForm = ({ isLogged }) => {
+
+const NotificationForm = (props,{ isLogged }) => {
     const history = useHistory();
     const context = useContext(Context);
     const [state, setState] = useState({ hasError: false, message: '' });
@@ -24,11 +26,24 @@ const NotificationForm = ({ isLogged }) => {
     const [isLoadingTopic, setLoadingTopic] = useState(true);
     const [count, SetCount] = useState(0);
 
-
+    const {
+        values,
+        touched,
+        dirty,
+        errors,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        handleReset,
+        setFieldValue,
+        setFieldTouched,
+        isSubmitting
+      } = props;
 
     useEffect(async () => {
         if (isLoadingCity) {
             const cities = await LoadService.getCities();
+            console.log({cities});
             setCities(cities);
             setLoadingCity(false);
         }
@@ -68,10 +83,12 @@ const NotificationForm = ({ isLogged }) => {
             <Formik
                 initialValues={initValues}
                 validationSchema={schema}
+                onChange={handleChange}              
                 onSubmit={async (values, { resetForm }) => {
                     try {
-                        console.log('se registro notificacion')
+                        console.log('entre')
                         const notificacion = NotificationGenerator.generate(values, cities, topics);
+                        console.log({notificacion})
                         await NotifcationService.send(notificacion);
                     } catch (error) {
                         setState('No se pudo notificar')
@@ -81,7 +98,6 @@ const NotificationForm = ({ isLogged }) => {
                 {props => (
                     <Div >
                         <h2 className='text-center tiitle-form'> Formulario de notificaciones </h2>
-
                         {state.hasError && <Error> {state.message} </Error>}
                         <Form_ onSubmit={props.handleSubmit}>
                             <div className='container '>
@@ -92,17 +108,17 @@ const NotificationForm = ({ isLogged }) => {
                                 </div>
                                 <div className='row  form-group justify-content-center'>
                                     <div className='col-12 col-md-6'>
-                                        <InputText text='Message *' placeholder='message' id="message" props={props} value={props.values.message} />
+                                        <InputText text='Message *' placeholder='message' id="description" props={props} value={props.values.description} />
                                     </div>
                                 </div>
                                 <div className='row  form-group justify-content-center'>
                                     <div className='col-12 col-md-6'>
-                                        <Select text='Topic *' placeholder='topic' id="topic" props={props} value={props.values.topic} elements={topics} />
+                                        <Select text='Topic *' placeholder='Seleccionar' id="topic" props={props} value={props.values.topic} options={topics} />
                                     </div>
                                 </div>
                                 <div className='row  form-group justify-content-center'>
                                 <div className='col-12 col-md-6'>
-                                    <Select text='Región *' placeholder='region' id="region" props={props} value={props.values.region} elements={cities} />
+                                    <Select text='Región *' placeholder='Seleccionar' id="area" props={props} value={props.values.area} options={cities}/>
                                 </div>
                                 </div>
                           
@@ -121,10 +137,7 @@ const NotificationForm = ({ isLogged }) => {
                                         <Button color='gray' type="button">Resetear</Button>
                                     </div>
                                 </div>
-
-                            </div>
-                            
-                           
+                            </div>                                                       
                         </Form_>
                     </Div>
                 )}

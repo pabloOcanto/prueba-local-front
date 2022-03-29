@@ -8,7 +8,7 @@ const Table = ({ data, rowsPerPage }) => {
  
   const [page, setPage] = useState(1);
   const { slice, range } = useTable(data, page, rowsPerPage);
-  const slice1 = [
+ /* const slice1 = [
     {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
     {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
     {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
@@ -16,7 +16,7 @@ const Table = ({ data, rowsPerPage }) => {
     {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
     {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
     {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'}
-  ]
+  ]*/
   return (
     <>
       <table className={styles.table}>
@@ -30,7 +30,7 @@ const Table = ({ data, rowsPerPage }) => {
           </tr>
         </thead>
         <tbody>
-          {slice1.map((el) => (
+          {data.map((el) => (
             <tr className={styles.tableRowItems} key={el.id}>
               <td className={styles.tableCell}>{el.topic}</td>
               <td className={styles.tableCell}>{el.title}</td>
@@ -41,7 +41,7 @@ const Table = ({ data, rowsPerPage }) => {
           ))}
         </tbody>
       </table>
-      <TableFooter range={[1,1]} slice={slice1} setPage={setPage} page={page} />
+      <TableFooter range={[1]} slice={data} setPage={setPage} page={page} />
     </>
   );
 };

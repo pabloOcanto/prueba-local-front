@@ -3,7 +3,7 @@ import ky from 'ky';
 class UserService{
 
     constructor() {
-        this.endpoint = process.env.REACT_APP_END_POINT+"/v1/user";
+        this.endpoint = process.env.REACT_APP_BACKEND_UR+"/v1/user";
     } 
 
     auth= async ()=>{

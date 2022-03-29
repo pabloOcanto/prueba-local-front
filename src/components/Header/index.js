@@ -8,7 +8,7 @@ import { FaUserAlt } from 'react-icons/fa';
 
 
 const data = {
-    firstName: 'Nicole',
+    firstName: 'AQUINO',
     lastName: 'Parker',
     img: ''
 }
@@ -29,10 +29,12 @@ const index = () => {
                     <div className='row mt-2  border-card'>
                         <div className='col-3 px-1'>
                             <FaUserAlt className='header-icon-image ' />
+                            asdf
                         </div>
                         <div className='col-4 pl-0 '>
                             <p className='m-0'>{data.firstName}</p>
                             <p className='m-0'>{data.lastName}</p>
+                            <p className='m-0'>ssdsdfgsdfg</p>
                         </div>
 
 

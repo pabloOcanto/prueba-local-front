@@ -1,49 +1,168 @@
-import React, { Component } from 'react';
-import alertaTitle from '../../assets/alertaTitle.png'
-import footerImg from '../../assets/footerImg.png'
+import React, { useEffect, useState } from 'react';
+import NotifcationService from "../../service/NotificationService"
 import { IoAddCircleOutline } from 'react-icons/io5';
-import { BsFillPatchExclamationFill } from 'react-icons/bs';
-import { BsListUl } from 'react-icons/bs';
 import { IoNotificationsCircleOutline } from 'react-icons/io5';
 import { BsImage } from 'react-icons/bs';
 import styled from 'styled-components';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import './home.css'
+import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
+import './home.css';
+/*import alertaTitle from '../../assets/alertaTitle.png';
+import footerImg from '../../assets/footerImg.png';
+import { BsFillPatchExclamationFill } from 'react-icons/bs';
+import { BsListUl } from 'react-icons/bs';*/
 
-//data
+
+const Home = () => {
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchNotifications, setNotifications] = useState([]);
+
+  useState(async () => {
+    if (isLoading) {
+      const notifications = await NotifcationService.getAll(1);
+      setNotifications(notifications);
+      setIsLoading(false);
+    }
+  }, isLoading);
+
+
+  return (
+    <div className='container'>
+      <div className='row mb-4'>
+        <div className='col-md-4 col-12'>
+          <h3 >e-trámite destacados</h3>
+        </div>
+      </div>
+      <div className='row gy-4'>
+        {cardsData.map((item, i) => {
+          return (
+            <div className='col-md-4 col-12'>
+              <Card key= {i} icon={IoAddCircleOutline} title={item.title} text={item.text} btnText={item.btnText} pathTo={item.pathTo}></Card>
+            </div>)
+        })}
+      </div>
+
+      <div className='row margin-top-card justify-content-between'>
+        <div className='col-md-5 col-12 pr-0'>
+          <div className='row justify-content-between '>
+            <div className='col-md-6 col-12'>
+              <h3 className='my-2'>Notificaciones</h3>
+            </div>
+            <div className='col-6 text-align-card'>             
+              <Link to='notification/list' className="my-2 text-align-card" style={{ color: '#999999' }}>Ver Todo</Link>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-12'>
+              <CardNotification>
+                {fetchNotifications.map((item, i) => {
+                  if (i <= 3) {
+                    return <Notification key= {i} title={item.title} text={item.text} daysText={item.daysText} item={item} />
+                  }
+                })}
+              </CardNotification>
+            </div>
+          </div>
+        </div>
+        <div className='col-md-6 col-12'>
+          <div className='row justify-content-between'>
+            <h3 className='my-2'>Novedades</h3>
+          </div>
+          <div className='row'>
+            <Carousel showStatus={false} className='carousel-bkg'>
+              {bannerData.map((item, i) => {
+                return (
+                  <div className='carousel-div row px-2'>
+                    <div className='col-md-8'>
+                      <p className='text-start my-2 font-weight-bold'>{item.title}</p>
+                    </div>
+                    <div className='col-md-3'>
+                      <BsImage className='card-icon-notification' />
+                    </div>
+                    <div className='col-md-12'>
+                      <p className='my-2 text-start' style={{ color: '#999999' }}>
+                        {item.text}
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </Carousel>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Home;
+
+//Componentes 
+const Card = props =>
+  <CardHome className='container box'>
+    <div className='row'>
+      <div className='col-3 pr-0'>
+        <IoAddCircleOutline className='card-icon' />
+      </div>
+      <div className='col-9 pl-0'>
+        <p className='title-card m-0'>{props.title}</p>
+        <p className='sub-title-card'>{props.text}</p>
+      </div>
+    </div>
+    <div className='row justify-content-end pr-2'>
+      <div className='col-auto' >
+        <Link to={props.pathTo} className="btn btn-primary">{props.btnText}</Link>
+      </div>
+    </div>
+  </CardHome>
+
+const Notification = props => {
+  const { id, area, description, title, topic, userCrearedId, dateCreated } = props.item;
+  return (
+    <>
+      <div className='row p-2'>
+        <div className='col-2 pr-0'>
+          <IoNotificationsCircleOutline className='card-icon-notification' />
+        </div>
+        <div className='col-10 pl-0'>
+          <p className='title-card m-0 '>{title}</p>
+          <p className='sub-title-card m-0'>{area}</p>
+          <p className='card-text m-0'>{description}</p>
+        </div>
+      </div>
+      <div className='row justify-content-end'>
+        <div className='col-auto' >
+          <Moment style={{ color: '#11A2D7', fontSize: '12px' }}>
+            {dateCreated}
+          </Moment>
+        </div>
+      </div>
+    </>
+  );
+}
+
+
 const cardsData = [
   {
-    title: "Trámite Multinota",
-    text: "Secretaria General de Gobernación",
-    btnText: 'Iniciar Online'
+    title: "Nueva notificación",
+    text: "Generar nueva notificación",
+    btnText: 'Ir',
+    pathTo: '/notification/create'
   },
   {
-    title: "Trámite Multinota",
-    text: "Ministerio de desarrollo social",
-    btnText: 'Iniciar Online'
+    title: "Listado de notificaciones",
+    text: "Mostrar listado completo de notificaciones",
+    btnText: 'Ir',
+    pathTo: '/notification/list'
   },
-{
+  {
     title: "Trámite Multinota",
     text: "Gobierno de la Provincia de Cordoba errerereerretgrgt",
-    btnText: 'Iniciar Online'
-  }
-];
-const notificationsData = [
-  {
-    title: " Vacunacion Covid 19",
-    text: "Refuerzo vacunacion covid",
-    daysText: 'hace 12 días'
-  },
-  {
-    title: " Vacunacion Covid 19",
-    text: "Refuerzo vacunacion covid",
-    daysText: 'hace 12 días'
-  },
-{
-  title: " Vacunacion Covid 19",
-    text: "Refuerzo vacunacion covid",
-    daysText: 'hace 12 días'
+    btnText: 'Iniciar Online',
+    pathTo: '/home'
   }
 ];
 
@@ -58,21 +177,15 @@ const bannerData = [
   }
 ];
 
-// const CardMenu = (props) =>(
-//     <div>{props.text}
-//     <IoMdAddCircleOutline />
-//     <p></p>
-//     </div>
-// );
-const CardMenu = styled.div.attrs({
 
+//Styles
+const CardMenu = styled.div.attrs({
 })`
     width:15em;
     height:20px;
     border: 2px solid black
   `;
 const CardNotification = styled.div.attrs({
-
 })`
     border:2px solid #bfc5d1;
     border-radius: 5px;
@@ -81,7 +194,6 @@ const CardNotification = styled.div.attrs({
     min-height:18em;
   `;
 const CardHome = styled.div.attrs({
-
 })`
     border:2px solid #bfc5d1;
     border-radius: 10px;
@@ -91,7 +203,6 @@ const CardHome = styled.div.attrs({
   `;
 
 const Button = styled.button.attrs({
-
 })`
     border-radius: 5px;
     color:white;
@@ -100,157 +211,3 @@ const Button = styled.button.attrs({
     align-items: flex-end;
     font-size:14px;
   `;
-
-const Card = props =>
-
-  <CardHome className='container box'>
-    <div className='row'>
-      <div className='col-3 pr-0'>
-        <IoAddCircleOutline className='card-icon' />
-      </div>
-      <div className='col-9 pl-0'>
-        <p className='title-card m-0'>{props.title}</p>
-        <p className='sub-title-card'>{props.text}</p>
-      </div>
-    </div>
-    <div className='row justify-content-end pr-2'>
-      <div className='col-auto' >
-        <Button >{props.btnText}</Button>
-      </div>
-    </div>
-  </CardHome>
-
-  ;
-
-const Notification = props =>
-  <>
-    <div className='row p-2'>
-      <div className='col-2 pr-0'>
-        <IoNotificationsCircleOutline className='card-icon-notification' />
-      </div>
-      <div className='col-10 pl-0'>
-        <p className='title-card m-0 font-weight-bold'>{props.title}</p>
-        <p className='sub-title-card m-0'>{props.text}</p>
-      </div>
-    </div>
-    <div className='row justify-content-end'>
-      <div className='col-auto' >
-        <p className='m-0' style={{ color: '#11A2D7', fontSize: '12px' }}>{props.daysText}</p>
-      </div>
-    </div>
-  </>;
-
-
-const Home = () => (
-
-  <div className='container'>
-    {/* cards */}
-    <div className='row mb-4'>
-    <div className='col-md-4 col-12'>
-        <h3 >e-trámite destacados</h3>
-     </div>
-      </div>
-      <div className='row gy-4'>
-      {cardsData.map((item,i)=>{
-        return (
-          <div className='col-md-4 col-12'>
-              <Card icon={IoAddCircleOutline} title={item.title} text={item.text} btnText={item.btnText}></Card>
-          </div>)
-      })}
-      </div>
-   
-    {/* notificaciones */}
-    <div className='row margin-top-card justify-content-between'>
-      <div className='col-md-5 col-12 pr-0'>
-        <div className='row justify-content-between '>
-          <div className='col-md-6 col-12'>
-            <h3 className='my-2'>Notificaciones</h3>
-          </div>
-          <div className='col-6 text-align-card'>
-            <p className='my-2 text-align-card' style={{ color: '#999999' }}>Ver Todo</p>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='col-12'>
-            <CardNotification>
-              {notificationsData.map((item, i)=>{
-                return <Notification title={item.title} text={item.text} daysText={item.daysText} />
-              })}
-            </CardNotification>
-          </div>
-        </div>
-      </div>
-      <div className='col-md-6 col-12'>
-        <div className='row justify-content-between'>
-
-          <h3 className='my-2'>Novedades</h3>
-
-        </div>
-        <div className='row'>
-          <Carousel showStatus={false} className='carousel-bkg'>
-            {bannerData.map((item, i)=>{
-              return(
-                <div className='carousel-div row px-2'>
-                  <div className='col-md-8'>
-                    <p className='text-start my-2 font-weight-bold'>{item.title}</p>
-                  </div>
-                  <div className='col-md-3'>
-                    <BsImage className='card-icon-notification' />
-                  </div>
-                  <div className='col-md-12'>
-                    <p className='my-2 text-start' style={{ color: '#999999' }}>
-                     {item.text}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </Carousel>
-        </div>
-      </div>
-    </div>
-  </div>
-
-//pagina anterior, no se si se vaya usar despues
-  // <div className='container-fluid'>
-  //     <div className="row text-center">
-  //         {/* <h2>Area de Administracion</h2>
-  //         <h3>Bienvenidos a nuestra web! </h3>
-  //         <p> Serivicio de notificaciones alerta confluencia  </p> */}
-  //        <div className='col-12'>  <img alt='title' className='img-size ' src={alertaTitle}></img></div>
-  //        <div className='col-12'> <h2 className='subtitile'> Área de administración de notificaciones </h2>  </div>
-
-
-  //     </div>
-  //     <div className='row justify-content-center'>
-  //         <p className='panel-font'> Panel de accesos directos </p>
-  //     </div>
-  //     <div className='row justify-content-center'>
-  //         <div className='col-md-4 col-9 align-self-center'>
-  //           <div className='card-menu'>
-  //            <IoAddCircleOutline  className='icon-size'/>
-  //            <p className='card-text text-center'>Nueva notificación</p>
-  //            </div>
-  //         </div>
-  //         <div className='col-md-4 col-9 align-self-center'>
-  //           <div className='card-menu'>
-  //            <BsListUl  className='icon-size'/>
-  //            <p className='card-text text-center'>Listado de notificaciones</p>
-  //            </div>
-  //         </div>
-  //         <div className='col-md-4 col-9 align-self-center'>
-  //           <div className='card-menu'>
-  //            <BsFillPatchExclamationFill  className='icon-size'/>
-  //            <p className='card-text text-center'>Reportar un problema</p>
-  //            </div>
-  //         </div>
-  //     </div>
-
-  // </div>    
-);
-
-var styles = {
-
-}
-
-export default Home;

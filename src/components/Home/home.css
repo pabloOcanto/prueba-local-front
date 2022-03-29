@@ -71,7 +71,8 @@
 .card-text{
     font-family: Arial, Helvetica, sans-serif;
     color: #999999;
-    font-size: 1.5em;
+    font-size: 1.2em;
+    text-transform: capitalize;
 }
 .card-icon{
     width: 90%;
@@ -95,6 +96,7 @@
   }
   .title-card{
    font-size: 16px;
+   text-transform: uppercase;
 }
   .sub-title-card{
       color: #bfc5d1;

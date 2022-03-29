@@ -4,15 +4,13 @@ import ky from 'ky';
 class NotifcationService{
 
     constructor() {
-        this.endpoint = process.env.REACT_APP_END_POINT+"/v1/notification";
+        this.endpoint = process.env.REACT_APP_BACKEND_URL+"/v1/notification";
     } 
 
 
 
     send= async (notification) =>{
-
         console.log("Enviado notificacion ",notification);
-
         const response = await ky.post(this.endpoint+"/create", {
             body: JSON.stringify(notification),
             headers: {

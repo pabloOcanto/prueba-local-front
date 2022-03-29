@@ -3,7 +3,7 @@ import ky from 'ky';
 class LoadService{
 
     constructor() {
-        this.endpoint = process.env.REACT_APP_END_POINT;
+        this.endpoint = process.env.REACT_APP_BACKEND_URL;
     } 
 
 

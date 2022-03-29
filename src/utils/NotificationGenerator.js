@@ -2,10 +2,13 @@ class NotificationGenerator{
 
 
     generate = (form,cities,topics) =>{
-
+console.log('entre')
         const myTopic = topics.filter( el => el.id == form.topic)
         const city = cities.filter( el => el.id == form.region)
-        
+        console.log({form})
+        console.log({myTopic})
+        console.log({city})
+
         let region =[]
         city.forEach( el => {
             let city_ ={}
@@ -17,7 +20,7 @@ class NotificationGenerator{
             region.push(city_);
         })
         
-
+console.log('pase');
         let notificaiton ={            
             topic:myTopic[0].name,
             title:form.title,

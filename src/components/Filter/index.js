@@ -1,23 +1,22 @@
 
-import React,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import NotifcationService from "../../service/NotificationService"
 import Table from '../Table'
 
 
 
-const Index = ({input,rows}) =>{ 
-
+const Index = ({ input, rows }) => {
+    //TODO CALCULAR LA PAGINACION
     const [data, setData] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
-    useEffect( async() =>{
-        if (isLoading){
+    useEffect(async () => {
+        if (isLoading) {
             const notifications = await NotifcationService.getAll(1);
             setData(notifications);
             setLoading(false);
         }
-    },isLoading)
-
+    }, isLoading)
 
     if (isLoading) {
         return <h2>Loading...</h2>;
@@ -31,15 +30,13 @@ const Index = ({input,rows}) =>{
         else {
             return el.title.toString().toLowerCase().includes(input)
         }
-        
     });
-    
-    return(
 
-        <Table data={filteredData} rowsPerPage={rows} />
-
+    return (
+        <>
+            <Table data={filteredData} rowsPerPage={rows} />
+        </>
     )
-
 }
 
 export default Index;
