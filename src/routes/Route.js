@@ -44,27 +44,6 @@ function Routes() {
     <Redirect to="/"/>
   }                
 </Switch>
-       {/* {context.isLogged && <Navbar/> }
-
-        <Switch>
-          {!context.isLogged && <Route exact path="/" component={Login}/> } 
-          {context.isLogged ?
-            <Route exact path="/notification/create" component={Notification}/>
-            :
-            <Redirect to="/"/>
-          }
-          {context.isLogged ?
-            <Route exact path="/home" component={HomePage}/>
-            :
-            <Redirect to="/"/>
-          }
-
-          {context.isLogged ?
-            <Route exact path="/notification/list" component={NotificationsPage}/>
-            :
-            <Redirect to="/"/>
-          }                
-        </Switch> */}
       </BrowserRouter>
     )}
     </Context.Consumer>

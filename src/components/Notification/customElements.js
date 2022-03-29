@@ -18,6 +18,11 @@ export const Input = styled.input.attrs({
   }
 `;
 
+export const Label = styled.label`
+    width: 100%;
+    height: 30px;
+`;
+
 export const Img = styled.img`
     width: 30px;
     height: 30px;

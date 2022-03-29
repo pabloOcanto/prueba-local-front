@@ -7,12 +7,10 @@ class NotifcationService{
         this.endpoint = process.env.REACT_APP_BACKEND_URL+"/v1/notification";
     } 
 
-
-
     send= async (notification) =>{
         console.log("Enviado notificacion ",notification);
-        const response = await ky.post(this.endpoint+"/create", {
-            body: JSON.stringify(notification),
+        const response = await ky.post(this.endpoint+"/create", {           
+          body: JSON.stringify(notification),
             headers: {
                 'content-type': 'application/json'
             },
@@ -24,7 +22,6 @@ class NotifcationService{
             }).json();
 
         console.log(response);    
-
     }
 
     getAll= async (userId) =>{
