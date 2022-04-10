@@ -10,13 +10,21 @@ import lock from '../../assets/lock.png';
 import user from '../../assets/user.png';
 import loginImg from '../../assets/loginImg.png'
 import { Input, Div, Error, Form_ } from './customElements';
+import { useCookies } from 'react-cookie';
 import './login.css';
 
 
 const Form = ({ isLogged }) => {
     const history = useHistory();
     const context = useContext(Context);
+  //  const [context, setContext] = useContext(Context);
     const [error, setError] = useState(null);
+    /*const [cookiesAccessToken, setCookieAccessToken] = useCookies(['access_token']);
+    const [cookiesUserID, setCookieUserID] = useCookies(['user_id']);
+    const [cookiesUserRol, setCookieUserRol] = useCookies(['user_rol']);*/
+    const [cookies, setCookie] = useCookies(['access_token','user_id','user_rol']);
+    
+    const inOneHour = new Date(new Date().getTime() + ((60 * 60) * 1000));//one hour
     return (
 
         <Formik
@@ -24,13 +32,21 @@ const Form = ({ isLogged }) => {
             validationSchema={schema}
             onSubmit={async (values, { resetForm }) => {
                 try {
-                    console.log('se inicio sesion')
-                    const token = await UserService.auth(values);
-                    context.login(token);
-                    history.push("/home");
+                    const token = await UserService.auth(values).then(function(res){
+                        setCookie('access_token', res.token,{ path: '/',  inOneHour})
+                        setCookie('user_id', res.user,{ path: '/',  inOneHour})
+                        setCookie('user_rol', res.rol,{ path: '/',  inOneHour})
+    
+                        history.push("/home");  
+                    }
+                      
+                    );
+                    context.login({token}); 
+                   
+                  
                     //resetForm();
                 } catch (error) {
-                    setError("No se pudo authenticar")
+                    console.log("No se pudo authenticar",error)
                 }
             }}>
 
@@ -53,16 +69,16 @@ const Form = ({ isLogged }) => {
                                         placeholder="usuario"
                                         inputColor='#bfc5d1'
                                         imgIcon={user}
-                                        id="user"
+                                        id="dni"
                                         type="text"
-                                        name="user"
+                                        name="dni"
                                         image={user}
                                         onChange={props.handleChange}
                                         onBlur={props.handleBlur}
-                                        value={props.values.user}
+                                        value={props.values.dni}
                                         autoComplete='off'
                                     /><br />
-                                    <ErrorMessage className='text-center' name='user' render={renderError} />
+                                    <ErrorMessage className='text-center' name='dni' render={renderError} />
                                     {/* <Img src={lock} /> */}
                                     <Input
                                         className='placeHolder-color'

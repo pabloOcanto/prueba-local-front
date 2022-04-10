@@ -1,17 +1,20 @@
 import React, { useState } from 'react'
+//import { Redirect } from 'react-router-dom';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from "react-icons/io";
 import * as BiIcons from "react-icons/bi";
 import * as MdIcons from "react-icons/md";
-import { Link, useLocation } from 'react-router-dom';
-import './Navbar.css';
-
+import { Link, useLocation ,useHistory } from 'react-router-dom';
 import alertaTitle from '../../assets/alertaTitle.png'
-import { MdOutlineNotificationAdd } from "react-icons/md";
 import { CgMenuGridR } from "react-icons/cg";
 import { FaUserAlt } from 'react-icons/fa';
-
+import { useCookies } from 'react-cookie';
+import { confirm } from "react-confirm-box";
+import context from '../../context/Context';
+import logout from '../../context/AuthProvider'
+import './Navbar.css';
+import AuthProvider from '../../context/AuthProvider';
 
 const isMobile = window.innerWidth <= 1023;
 const data = {
@@ -20,14 +23,45 @@ const data = {
     img: ''
 }
 
-const Navbar = () => {
+
+const Navbar = (props) => {
     let location = useLocation();
     const [sidebar, setSidebar] = useState(false);
     const [notificationMenu, setNotificationMenu] = useState(false);
     const [usersMenu, setUsersMenu] = useState(false);
+    const [cookies,removeCookie] = useCookies(['access_token']);
     const showSidebar = () => setSidebar(!sidebar);
     const showNotificationMenu = () => setNotificationMenu(!notificationMenu);
     const showUsersMenu = () => setUsersMenu(!usersMenu);
+    const history = useHistory();
+
+
+    const handleLogout = async () => {
+        let options={
+            labels: {
+                confirmable: "Si",
+                cancellable: "No"
+              }
+        }
+        const result = await confirm("Estás seguro de cerrar sesión?", options,);
+        if (result) {
+            document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });            
+            window.location.reload();
+    
+        }
+    };
+
+    const customConfirm = {
+        render: (message, onConfirm, onCancel) => {
+          return (
+            <>
+              <h1>{message} </h1>
+              <button onClick={onConfirm}> Si </button>
+            </>
+          );
+        }
+      };
+
     return (
         <>
             <div className='navbar'>
@@ -46,7 +80,7 @@ const Navbar = () => {
                         <Link to='/users/create' >
                             <span> <FaUserAlt className='header-icon-image hide-mobile ' /> </span>
                         </Link>
-                        <span className='hide-mobile' > {data.firstName + ' ' + data.lastName}</span>
+                        <span className='hide-mobile' > {cookies.user_id}</span>
                     </div>
                 </div>
             </div>
@@ -67,7 +101,7 @@ const Navbar = () => {
                     <li className={`nav-text ${location.pathname == '/home' ? 'active-menu' : ''}`}>
                         <Link to='/home' className='menu-bars'>
                             <AiIcons.AiFillHome />
-                            <span>Home</span>
+                            <span>Inicio</span>
                         </Link>
 
                     </li>
@@ -118,10 +152,8 @@ const Navbar = () => {
                             </li>
                         </>
                     }
-
-
                     <li className='nav-text sub-menu'>
-                        <Link to='#' className='menu-bars sub-menu' onClick={showNotificationMenu}>
+                        <Link to='#' className='menu-bars sub-menu' onClick={handleLogout}>
                             <BiIcons.BiLogOutCircle />
                             <span>Salir</span>
                         </Link>
@@ -132,4 +164,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar
+export default  Navbar

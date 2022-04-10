@@ -44,7 +44,7 @@ const Sidebar = (props) => {
                    <AiFillHome className='side-icon-size'/>
                 </NavIcon>
                 <NavText>
-                    Home
+                    Inicio
                 </NavText>
             </NavItem>
             <NavItem eventKey="notification" subnavStyle={{'background-color': '#354051','color':'white'}} >

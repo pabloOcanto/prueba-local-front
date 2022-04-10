@@ -1,57 +1,46 @@
 import ky from 'ky';
 
-
 class NotifcationService{
 
     constructor() {
-        this.endpoint = process.env.REACT_APP_BACKEND_URL+"/v1/notification";
+        this.endpoint = process.env.REACT_APP_BACKEND_URL+"/v1/notification/";
     } 
 
-    send= async (notification) =>{
-        console.log("Enviado notificacion ",notification);
-        const response = await ky.post(this.endpoint+"/create", {           
-          body: JSON.stringify(notification),
+    send= async (notification,token) =>{
+        console.log("Enviado notificacion ",notification);       
+        delete notification.topicObject;
+      
+        const response = await fetch(this.endpoint+"create", {
+            method: 'POST',
+            body: JSON.stringify(notification),
             headers: {
-                'content-type': 'application/json'
-            },
-            retry: {
-                limit: 3,
-                methods: ['post'],
-                statusCodes: [401]
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + token
             }
-            }).json();
+        });
 
-        console.log(response);    
+       return response;  
     }
 
-    getAll= async (userId) =>{
-
+    getAll= async (userId,token) =>{
         const user= userId || 1;
-
-        console.log("Recuperando notificaciones ",userId);
-
         try {
-            const response = await ky.get(this.endpoint+"/getAllNotification?userId="+user, {
+            const response = await ky.get(this.endpoint+"getNotification?user="+user, {
                 headers: {
-                    'content-type': 'application/json'
+                    'content-type': 'application/json',
+                    'Authorization': 'Bearer ' + token
                 },
                 retry: {
                     limit: 3,
                     methods: ['post'],
                     statusCodes: [401]
                 }
-                }).json();
-    
-            console.log(response);    
-            return response;    
-       
-            
+                }).json(); 
+            return response;               
         } catch (error) {
             console.error(error);
             return [];
-
         }
-
     }
 
 }

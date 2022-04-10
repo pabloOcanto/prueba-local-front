@@ -37,7 +37,6 @@ const UserForm = ({ isLogged }) => {
     }
 
     const handleReset = (values, { setSubmitting, setErrors }) => {
-        console.log(values)
         setInitialValues(initValues)
     }
 

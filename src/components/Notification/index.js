@@ -1,37 +1,32 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
-import Context from '../../context/Context';
 import { Button, Div, Error, Form_, Input, Label } from './customElements';
 import Select from 'react-select';
 import LoadService from '../../service/LoadService';
 import NotifcationService from '../../service/NotificationService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useCookies } from 'react-cookie';
 import { ErrorMessage } from 'formik';
 
 const NotificationForm = (props, { isLogged, loguedUser }) => {
+    let modelToSave = {
+        topicObject: '',
+        topic: '',
+        title: '',
+        area: [],
+        message: ''
+    }
+
+    const [newNotification, setNewNotification] = useState(modelToSave)
     const [cities, setCities] = useState([]);
     const [topics, setTopics] = useState([]);
     const [isLoadingCity, setLoadingCity] = useState(true);
     const [isLoadingTopic, setLoadingTopic] = useState(true);
-    const [hasErrors, setHasError] = useState(false);
-
-    let modelToSave = {
-        topic: [],
-        title: '',
-        area: [],
-        description: '',
-        date_created: '',
-        user_created_id: '',
-        status: '1'
-    }
-
-    const [newNotification, setNewNotification] = useState(modelToSave)
+    const [cookies] = useCookies(['access_token']);
 
     useEffect(async () => {
         if (isLoadingCity) {
-            const cities = await LoadService.getCities();
-            console.log({ cities });
+            const cities = await LoadService.getCities(cookies.access_token);
             setCities(cities);
             setLoadingCity(false);
         }
@@ -40,7 +35,7 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
 
     useEffect(async () => {
         if (isLoadingTopic) {
-            const topics = await LoadService.getTopics();
+            const topics = await LoadService.getTopics(cookies.access_token);
             setTopics(topics);
             setLoadingTopic(false);
         }
@@ -59,6 +54,14 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
     const handleChangeSelect = async (value, name) => {
         setNewNotification(newNotification => ({
             ...newNotification,
+            [name]: value,
+            topic: value.name
+        }));
+    };
+
+    const handleChangeSelectArea = async (value, name) => {
+        setNewNotification(newNotification => ({
+            ...newNotification,
             [name]: value
         }));
     };
@@ -67,51 +70,9 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
         evt.preventDefault();
 
         if (validateSubmit()) {
-           /* await setNewNotification(newNotification => ({
-                ...newNotification,
-                "date_created": Date.now(),
-                "user": "loguedUser"
-            }))
-            */
-
-            newNotification.topic.forEach(topicLoop => {
-                newNotification.area.forEach(areaLoop => {
-                    let notification = {
-                        topic: topicLoop.id,
-                        title: newNotification.title,
-                        area: areaLoop.id,
-                        description: newNotification.description,
-                        date_created:  Date.now(),
-                        user_created_id:  "loguedUser",
-                        status: 1
-                    }
-                    try {                    
-                       const returnCode =  NotifcationService.send(notification);                       
-                      /*  if(returnCode===200){
-                            toast.success("Guardado con éxito", {
-                                position: "top-right",
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                            });
-                        }
-                        else{
-                            console.log('sssssss',returnCode)
-                            toast.error(returnCode, {
-                                position: "top-right",
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                            });*/
-                        }
-                    catch (error) {
-                        toast.error(error, {
+                const returnCode = await NotifcationService.send(newNotification, cookies.access_token).then(res => {
+                    if (res.ok) {
+                        toast.success("Guardado con éxito", {
                             position: "top-right",
                             autoClose: 5000,
                             hideProgressBar: false,
@@ -121,14 +82,20 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                             progress: undefined,
                         });
                     }
-
-                })
-            })
-
-           // handleReset();
+                    else {
+                        toast.error('Se produjo un error al guardar la notificación', {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
+                    }              
+            });
+            // handleReset();
         }
-
-
     }
 
     const handleReset = async () => {
@@ -142,7 +109,7 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
             errors.push('Capture el título')
         }
 
-        if (newNotification.description.length === 0) {
+        if (newNotification.message.length === 0) {
             errors.push('Capture la descripción')
         }
         if (newNotification.topic.length === 0) {
@@ -163,7 +130,7 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                 progress: undefined,
             });
         });
-        if(errors.length===0){
+        if (errors.length === 0) {
             return true
         }
     }
@@ -195,10 +162,10 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                             <Label>
                                 Mensaje
                                 <Input
-                                    value={newNotification.description}
+                                    value={newNotification.message}
                                     type="text"
                                     onChange={e => { handleChange(e) }}
-                                    name="description"
+                                    name="message"
                                     className='sc-bYoBSM hCrKND'
                                 />
                             </Label>
@@ -209,10 +176,9 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                             <Label>
                                 Topic
                                 <Select {...props}
-                                    value={newNotification.topic}
-                                    isMulti
+                                    value={newNotification.topicObject}
                                     options={topics}
-                                    onChange={e => { handleChangeSelect(e, "topic") }}
+                                    onChange={e => { handleChangeSelect(e, "topicObject") }}
                                     getOptionLabel={(option) => option.name}
                                     getOptionValue={(option) => option.id}
                                 />
@@ -223,21 +189,21 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                         <div className='col-18 col-md-10'>
                             <Label>
                                 Area
-                                </Label>
-                                <Select {...props}
-                                    value={newNotification.area}
-                                    isMulti
-                                    options={cities}
-                                    onChange={e => { handleChangeSelect(e, "area") }}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionValue={(option) => option.id}
-                                />                        
+                            </Label>
+                            <Select {...props}
+                                value={newNotification.area}
+                                isMulti
+                                options={cities}
+                                onChange={e => { handleChangeSelectArea(e, "area") }}
+                                getOptionLabel={(option) => option.city}
+                                getOptionValue={(option) => option.id}
+                            />
                         </div>
                     </div>
-                   
+
                     <div className='row  form-group justify-content-center'>
                         <div className='col-18 col-md-10'>
-                            <Button color='green' type="submit"  onClick={handleSubmit}>Enviar</Button>
+                            <Button color='green' type="submit" onClick={handleSubmit}>Enviar</Button>
                         </div>
                     </div>
                     <div className='row  form-group justify-content-center'>

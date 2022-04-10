@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useContext} from 'react';
 import NotifcationService from "../../service/NotificationService"
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { IoNotificationsCircleOutline } from 'react-icons/io5';
@@ -8,26 +8,23 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import Context from  '../../context/Context'
+import { useCookies } from 'react-cookie';
 import './home.css';
-/*import alertaTitle from '../../assets/alertaTitle.png';
-import footerImg from '../../assets/footerImg.png';
-import { BsFillPatchExclamationFill } from 'react-icons/bs';
-import { BsListUl } from 'react-icons/bs';*/
 
-
-const Home = () => {
-
+const Home = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchNotifications, setNotifications] = useState([]);
+  const [cookies] = useCookies(['access_token']);
+  const context = useContext(Context);
 
   useState(async () => {
     if (isLoading) {
-      const notifications = await NotifcationService.getAll(1);
-      setNotifications(notifications);
+      const notifications = await NotifcationService.getAll(1,cookies.access_token);
+      setNotifications(notifications.content);
       setIsLoading(false);
     }
   }, isLoading);
-
 
   return (
     <div className='container'>

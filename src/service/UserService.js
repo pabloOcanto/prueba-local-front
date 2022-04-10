@@ -1,24 +1,24 @@
 import ky from 'ky';
 
-class UserService{
+class UserService {
 
     constructor() {
-        this.endpoint = process.env.REACT_APP_BACKEND_UR+"/v1/user";
-    } 
+        this.endpoint = process.env.REACT_APP_BACKEND_URL + "/v1/user/oauth/token";
+    }
 
-    auth= async ()=>{
-
-        //TODO quitar
-        return "f3saxtesr";
-
-        const response = await ky.post(this.endpoint+"/login", {
+    auth = async (loginValues) => {
+        const response = await ky.post(this.endpoint, {
+            body: JSON.stringify(loginValues),
+            headers: {
+                'content-type': 'application/json'
+            },
             retry: {
                 limit: 3,
                 methods: ['post'],
                 statusCodes: [400]
             }
-            }).json();
-    
+        }).json();
+        return response;
     }
 }
 

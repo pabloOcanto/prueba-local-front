@@ -1,65 +1,46 @@
 import ky from 'ky';
 
-class LoadService{
-
+class LoadService {
     constructor() {
         this.endpoint = process.env.REACT_APP_BACKEND_URL;
-    } 
+    }
 
-
-    getTopics= async ()=>{
+    getTopics = async (token) => {
 
         try {
-            let topics =[]
-            const endpoint= this.endpoint+"/v1/topic/getAllTopic";
-
-            topics = await ky(endpoint).json();
-
-            console.log(topics);
-    
+            let topics = []
+            const endpoint = this.endpoint + "/v1/topic/getAllTopic";
+            topics = await ky(endpoint, { headers: { 'Authorization': 'Bearer ' + token } }).json();
             return topics;
         } catch (error) {
             console.log("No se pudo obtener los topicos");
-
-            return[];
+            return [];
         }
-
     }
 
-
-    getCities= async ()=>{
-
+    getCities = async (token) => {
         try {
-            const endpoint= this.endpoint+"/v1/city/getAllCity";
-
-            const response = await ky(endpoint).json();
+            const endpoint = this.endpoint + "/v1/city/getAllCity";
+            const response = await ky(endpoint, { headers: { 'Authorization': 'Bearer ' + token } }).json();
 
             let cities = []
             response.forEach(element => {
-                let city ={}
-                city["id"]= element.id
-                city["name"]= element.state + ", "+element.city
+                let city = {}
+                city["id"] = element.id
+                city["state"] = element.state
+                city["city"] = element.city
                 city["lat"] = element.lat
-                city["lon"] = element.lon
-                console.log(city);
+                city["lon"] = element.lon             
                 cities.push(city);
             });
-
-            console.log(cities);
-
             return cities;
-    
-        } catch (error) {
 
+        } catch (error) {
             console.log("No se pudo obtener las ciudades");
             return [];
         }
-    
     }
-
-
 }
 
 const service = new LoadService();
-
 export default service; 

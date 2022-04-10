@@ -1,5 +1,5 @@
 let initValues = {
-user: '',
+dni: '',
 password:''
 }
 
