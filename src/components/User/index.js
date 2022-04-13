@@ -1,123 +1,296 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useHistory } from "react-router-dom";
-import Context from '../../context/Context'
-import { Formik, Form } from 'formik';
-import initValues from './initialvalues';
-import schema from './schema';
-import { Button, Div, Error, Form_ } from './customElements';
-import InputText from './InputText';
-import Select from './Select';
-import ButtonBostrapt from './ButtonBostrapt'
-import LoadService from '../../service/LoadService';
-import NotifcationService from '../../service/UserService';
-//import UserGenerator from '../../utils/UserGenerator';
-import Regions from './Regions';
+import { Button, Div, Error, Form_, Input, Label } from './customElements';
+import Select from 'react-select';
+//import LoadService from '../../service/LoadService';
+import UserService from '../../service/UserService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useCookies } from 'react-cookie';
 
-let userTypes = [
-    {
-        "id": '0',
-        "name": 'Seleccione'
-    },
-    {
-        "id": '1',
-        "name": 'Usuario'
-    },
-    {
-        "id": '2',
-        "name": 'Administrador'
-    }
-]
-
-const UserForm = ({ isLogged }) => {
-    const [state, setState] = useState({ hasError: false, message: '' });
-    const [initialValues, setInitialValues] = useState(initValues)
-
-    const handleSubmit = (values) => {
-        alert(JSON.stringify(values, null, 2));
-    }
-
-    const handleReset = (values, { setSubmitting, setErrors }) => {
-        setInitialValues(initValues)
-    }
-
-    /*
-    const handleSubmit = async(values, { setSubmitting, setErrors }) => {
-        setSubmitting(true)
-        const { value: { status, message } } = await console.log(values)
-        if (status) {
-          this.fetchCompanies()
-          this.closeModal()
-        } else {
-          setErrors({ email: message })
+/*let dummySave ={
+    "topic":"peligro",
+    "title":"Fuertes Precitaciones",
+    "locationdescription": "Plottier, Neuquen. 13/12/21 - 18:45",
+    "message":"La Ruta ede-sur advierte que por las proximas 48Hs no se podra brindar el servcio.Ante cualquier emergencia contactarse al 2284 450-2214",
+    "icon":"precipitaciones.png",
+    "area":[
+        {
+        "lat":"-40.156",
+        "lon":"-64.348",
+        "state":"Chubut",
+        "city":"Rawson"
+        },
+        {
+        "lat":"-40.156",
+        "lon":"-63.348",
+        "state":"Neuquen",
+        "city":"San Martin"
         }
-      }
-    */
-    return (
-        <>
-            <Formik
-                initialValues={initialValues}
-                validationSchema={schema}
-                onSubmit={(values, formikProps) => this.handleSubmit(values, formikProps)}
-            >
+    ],
+    "userCreatedId":1
+}*/
 
-                {props => (
-                    <Div >
-                        <h2 className='text-center tiitle-form'> Formulario de usuarios </h2>
-                        {state.hasError && <Error> {state.message} </Error>}
-                        <Form onSubmit={() => { handleSubmit(props.values) }} autoComplete="none">
-                            <div className='container '>
-                                <div className='row  form-group justify-content-center'>
-                                    <div className='col-12 col-md-6'>
-                                        <InputText type="text" text='Nombre de usuario (DNI)' placeholder='Capture el DNI del usuario' id="userDNI"
-                                            props={props} value={props.values.userDNI} maxlength="8"
-                                        />
-                                    </div>
-                                </div>
-                                <div className='row  form-group justify-content-center'>
-                                    <div className='col-12 col-md-6'>
-                                        <InputText text='Correo electrónico' placeholder='Email' id="email" props={props} value={props.values.email} />
-                                    </div>
-                                </div>
-                                <div className='row  form-group justify-content-center'>
-                                    <div className='col-12 col-md-6'>
-                                        <InputText text='Teléfono' placeholder='Número Telefónico' id="phone" maxlength={15} props={props} value={props.values.phone} />
-                                    </div>
-                                </div>
-                                <div className='row  form-group justify-content-center'>
-                                    <div className='col-12 col-md-6'>
-                                        <InputText type="password" autocomplete="none" text='Contraseña' placeholder='Contraseña' id="password1" maxlength={15} props={props} value={props.values.password1} />
-                                    </div>
-                                </div>
-                                <div className='row  form-group justify-content-center'>
-                                    <div className='col-12 col-md-6'>
-                                        <InputText type="password" autocomplete="none" text='Confirmar Contraseña' placeholder='Contraseña' id="password2" maxlength={15} props={props} value={props.values.password2} />
-                                    </div>
-                                </div>
-                                <div className='row  form-group justify-content-center'>
-                                    <div className='col-12 col-md-6'>
-                                        <Select text='Tipo de usuario' placeholder='Seleccione' id="userType" props={props} value={props.values.userType} elements={userTypes} />
-                                    </div>
-                                </div>
-                                <div className='row justify-content-center'>
-                                    <div className='col-12 col-md-6 ' id='enviar'>
-                                        {/* <Button color='green' type="submit" disabled={isSubmitting || !isValid || !dirty}>Enviar</Button> */}
-                                        <Button color='green' type="submit" >Enviar</Button>
-                                    </div>
-                                </div>
-                                <div className='row justify-content-center py-4'>
-                                    <div className='col-12 col-md-6' id='reset'>
-                                        <Button color='gray' type="button" onClick={() => {
-                                            handleReset(props.values)
-                                        }}>Resetear</Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Form>
-                    </Div>
-                )}
-            </Formik>
+const UserForm = (props, { isLogged, loguedUser }) => {
+    let modelToSave = {
+        dni: '',
+        email: '',
+        password: '',
+        password2: '',
+        mobilePhone: '',
+        fullName: '',
+        rol: '',
+        status: 'ACTIVE'
+    }
+
+    const userTypes = [
+        {
+            label: 'Usuario',
+            value: 'USER'
+        },
+        {
+            label: 'ADMIN',
+            value: 'ADMIN'
+        }
+    ]
+
+    const [newUser, setNewUser] = useState(modelToSave)
+    const [cookies] = useCookies(['access_token']);
+
+    const handleChange = async (e) => {
+        const { name, value } = e.target;
+        setNewUser(newUser => ({
+            ...newUser,
+            [name]: value
+        }));
+    };
+
+    const handleChangeSelect = async (value, name) => {
+        setNewUser(newUser => ({
+            ...newUser,
+            [name]: value.value
+        }));
+    };
+
+    const handleSubmit = async (evt) => {
+        evt.preventDefault();
+        if (validateSubmit()) {
+            const returnCode = await UserService.create(newUser, cookies.access_token).then(res => {
+                if (res.ok) {
+                    toast.success("Guardado con éxito", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                    handleReset();
+                }
+                else {
+                    toast.error('Se produjo un error al guardar la notificación', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            });
+        }
+    }
+
+    const handleReset = async () => {
+        setNewUser(modelToSave)
+    }
+
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
+    const validateNumerics = (dni, length) => {
+        switch (length) {
+            case 8:
+                return String(dni)
+                    .toLowerCase()
+                    .match(/^\d{8}$/
+                    );
+                break;
+            case 10:
+                return String(dni)
+                    .toLowerCase()
+                    .match(/^\d{10}$/
+                    );
+                break;
+            default:
+                break;
+        }
+
+
+    };
+
+    const validateSubmit = () => {
+        const errors = [];
+
+        if (!validateNumerics(newUser.dni, 8)) {
+            errors.push('Capture un DNI válido de 8 caracteres numéricos')
+        }
+
+        if (!validateEmail(newUser.email)) {
+            errors.push('Capture un email válido')
+        }
+
+        if (newUser.fullName.length < 3) {
+            errors.push('Capture un nombre válido')
+        }
+
+        if (!validateNumerics(newUser.mobilePhone, 10)) {
+            errors.push('Capture número telefónico válido(10 dígitos)')
+        }
+        // TODO regexp password
+        if (newUser.password.length < 6) {
+            errors.push('Capture una contraseña válida')
+        }
+
+        if (newUser.password !== newUser.password2) {
+            errors.push('Las contraseñas no coinciden')
+        }
+
+        errors.forEach(element => {
+            toast.warn(element, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        });
+        if (errors.length === 0) {
+            return true
+        }
+    }
+
+    return (
+        <>    <ToastContainer />
+            <Div className='container col-12 col-md-6'>
+                <h2 className='text-center tiitle-form'> Formulario de usuarios </h2>
+                <Form_ onSubmit={handleSubmit}>
+                    <div className='row form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label >
+                                DNI
+                                <Input
+                                    value={newUser.dni}
+                                    type="email"
+                                    onChange={e => { handleChange(e) }}
+                                    name="dni"
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row  form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label>
+                                email
+                                <Input
+                                    value={newUser.email}
+                                    type="email"
+                                    onChange={e => { handleChange(e) }}
+                                    name="email"
+                                    className='sc-bYoBSM hCrKND'
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label >
+                                Nombre Completo
+                                <Input
+                                    value={newUser.fullName}
+                                    type="text"
+                                    onChange={e => { handleChange(e) }}
+                                    name="fullName"
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label >
+                                Número telefónico
+                                <Input
+                                    value={newUser.mobilePhone}
+                                    type="text"
+                                    onChange={e => { handleChange(e) }}
+                                    name="mobilePhone"
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row  form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label>
+                                Topic
+                                <Select
+                                    value={{ label: newUser.rol }}
+                                    options={userTypes}
+                                    onChange={e => { handleChangeSelect(e, "rol") }}
+                                    name="rol"
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label >
+                                Contraseña
+                                <Input
+                                    value={newUser.password}
+                                    type="password"
+                                    onChange={e => { handleChange(e) }}
+                                    name="password"
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Label >
+                                Confirmar Contraseña
+                                <Input
+                                    value={newUser.password2}
+                                    type="password"
+                                    onChange={e => { handleChange(e) }}
+                                    name="password2"
+                                />
+                            </Label>
+                        </div>
+                    </div>
+                    <div className='row  form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Button color='green' type="submit" onClick={handleSubmit}>Enviar</Button>
+                        </div>
+                    </div>
+                    <div className='row  form-group justify-content-center'>
+                        <div className='col-18 col-md-10'>
+                            <Button color='gray' type="button" onClick={handleReset}>Resetear</Button>
+                        </div>
+                    </div>
+                </Form_>
+            </Div>
         </>
     )
 };
 
-export default UserForm;
+export default UserForm;;
+
+

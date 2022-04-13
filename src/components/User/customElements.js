@@ -24,6 +24,11 @@ export const Img = styled.img`
 `;
 
 
+export const Label = styled.label`
+    width: 100%;
+    height: 30px;
+`;
+
 
 export const Form_ = styled.form`
 

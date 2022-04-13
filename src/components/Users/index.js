@@ -1,27 +1,79 @@
-import React,{useState} from 'react';
-import Search from '../Search'
-import Filter from '../Filter'
+import React, { useState } from 'react';
+import UserService from "../../service/UserService"
+import { useCookies } from 'react-cookie';
+import MaterialTable from "material-table";
 
-const Index =()=>{
+const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchData, setData] = useState();
+  const [cookies] = useCookies(['access_token']);
+  const [selectedRow, setSelectedRow] = useState(null);
 
-    const [inputText, setInputText] = useState("");
+  const columns = [
+    { title: 'id', field: 'id', width: "5%" },
+    { title: 'DNI', field: 'dni' },
+    { title: 'Email', field: 'email' },
+    { title: 'Nombre completo', field: 'fullName'},
+    { title: 'Teléfono', field: 'mobilePhone'},
+    { title: 'Rol', field: 'rol' },
+    { title: 'Estatus', field: 'status' }
+  ];
 
-    const inputHandler = (e) => {
-      //convert input text to lower case
-      const lowerCase = e.target.value.toLowerCase();
-      setInputText(lowerCase);
+const  localization={
+    pagination: {
+        labelDisplayedRows: '{from}-{to} de {count}'
+    },
+    toolbar: {
+        nRowsSelected: '{0} registro(s) seleccionado',
+        searchPlaceholder:'Buscar',
+        searchTooltip:'Buscar'
+    },
+    header: {
+        actions: 'Acciones'
+    },
+    body: {
+        emptyDataSourceMessage: 'No hay registros para mostrar',
+        filterRow: {
+            filterTooltip: 'Filtro'
+        },
+    },
+    pagination:{
+      labelRowsSelect:'Registros',
+      firstTooltip:'Primera página',
+      previousTooltip:'Página anterior',
+      nextTooltip:'Página siguiente',
+      lastTooltip:'Última página',
+      labelDisplayedRows:    '{from}-{to} de {count}'
     }
+}
 
-    return (
-        <div className=''>
-        <div className="row">
-        <Search inputHandler={inputHandler} />
-        </div>
-        <div className='row'>
-        <Filter input={inputText} rows={20} />
-        </div>
-        </div>
-    )
+const  styleOptions={
+   rowStyle: {
+     fontSize: 12,
+   }
+  }
+
+  useState(async () => {
+    //if (isLoading) {
+      const users = await UserService.getAll(cookies.access_token);
+      setData(users.content);
+      setIsLoading(false);
+    
+  }, isLoading);
+
+  return (
+    <div className=''>
+      <div style={{ maxWidth: '100%' }}>
+        <MaterialTable 
+                columns={columns} 
+                data={fetchData} 
+                title='' 
+                localization={localization} 
+                options={styleOptions}           
+                />
+      </div>
+    </div>
+  )
 }
 
 export default Index;

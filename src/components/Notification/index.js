@@ -6,7 +6,29 @@ import NotifcationService from '../../service/NotificationService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCookies } from 'react-cookie';
-import { ErrorMessage } from 'formik';
+
+/*let dummySave ={
+    "topic":"peligro",
+    "title":"Fuertes Precitaciones",
+    "locationdescription": "Plottier, Neuquen. 13/12/21 - 18:45",
+    "message":"La Ruta ede-sur advierte que por las proximas 48Hs no se podra brindar el servcio.Ante cualquier emergencia contactarse al 2284 450-2214",
+    "icon":"precipitaciones.png",
+    "area":[
+        {
+        "lat":"-40.156",
+        "lon":"-64.348",
+        "state":"Chubut",
+        "city":"Rawson"
+        },
+        {
+        "lat":"-40.156",
+        "lon":"-63.348",
+        "state":"Neuquen",
+        "city":"San Martin"
+        }
+    ],
+    "userCreatedId":1
+}*/
 
 const NotificationForm = (props, { isLogged, loguedUser }) => {
     let modelToSave = {
@@ -14,7 +36,10 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
         topic: '',
         title: '',
         area: [],
-        message: ''
+        message: '',
+        locationdescription:'Plottier, Neuquen. 13/12/21 - 18:45',
+        icon:"precipitaciones.png",
+        userCreatedId:1
     }
 
     const [newNotification, setNewNotification] = useState(modelToSave)
@@ -55,7 +80,8 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
         setNewNotification(newNotification => ({
             ...newNotification,
             [name]: value,
-            topic: value.name
+            topic: value.name,
+            icon : value.name+'.png'
         }));
     };
 
@@ -81,6 +107,7 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                             draggable: true,
                             progress: undefined,
                         });
+                        handleReset();
                     }
                     else {
                         toast.error('Se produjo un error al guardar la notificación', {
@@ -94,7 +121,7 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                         });
                     }              
             });
-            // handleReset();
+         
         }
     }
 

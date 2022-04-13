@@ -21,7 +21,7 @@ const Home = (props) => {
   useState(async () => {
     if (isLoading) {
       const notifications = await NotifcationService.getAll(1,cookies.access_token);
-      setNotifications(notifications.content);
+      setNotifications(notifications.content.reverse());
       setIsLoading(false);
     }
   }, isLoading);
@@ -55,8 +55,8 @@ const Home = (props) => {
           <div className='row'>
             <div className='col-12'>
               <CardNotification>
-                {fetchNotifications.map((item, i) => {
-                  if (i <= 3) {
+                {(fetchNotifications.reverse()).map((item, i) => {
+                  if (i < 3) {
                     return <Notification key= {i} title={item.title} text={item.text} daysText={item.daysText} item={item} />
                   }
                 })}
@@ -132,7 +132,7 @@ const Notification = props => {
       </div>
       <div className='row justify-content-end'>
         <div className='col-auto' >
-          <Moment style={{ color: '#11A2D7', fontSize: '12px' }}>
+          <Moment format="DD/MM/YYYY HH:MM" style={{ color: '#11A2D7', fontSize: '12px' }}>
             {dateCreated}
           </Moment>
         </div>
