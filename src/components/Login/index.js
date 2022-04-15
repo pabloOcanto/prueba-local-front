@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Form from './Form'
-import Header from './Header'
 import backgroundImg from '../../assets/loginBackground.jpg'
 
 
@@ -29,10 +28,7 @@ const index = ()=>(
     <BackgroundDiv className='container-fluid '>
         <Div className='row justify-content-center'>
             <Div className='col-md-12 '>
-            {/* <Center className='justify-content-center col-8'>     */}
-            {/* <Header/>     */}
             <Form/>
-            {/* </Center> */}
             </Div>
         </Div>
     </BackgroundDiv>

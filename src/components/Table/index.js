@@ -7,15 +7,6 @@ const Table = ({ data, rowsPerPage }) => {
  
   const [page, setPage] = useState(1);
   const { slice, range } = useTable(data, page, rowsPerPage);
- /* const slice1 = [
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'},
-    {id:1, topic:'t1',title:'title 1', description:'desc 1', area:'a1', dateCreated:'01-01-2020'}
-  ]*/
   return (
     <>
       <table className={styles.table}>

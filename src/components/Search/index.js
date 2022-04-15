@@ -1,8 +1,6 @@
 import React,{useState} from 'react';
 import styled from 'styled-components';
 
-
-
 export const TextField = styled.input`
 margin: 1em 0;
 padding: .5em;

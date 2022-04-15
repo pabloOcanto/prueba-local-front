@@ -17,11 +17,7 @@ import './login.css';
 const Form = ({ isLogged }) => {
     const history = useHistory();
     const context = useContext(Context);
-  //  const [context, setContext] = useContext(Context);
     const [error, setError] = useState(null);
-    /*const [cookiesAccessToken, setCookieAccessToken] = useCookies(['access_token']);
-    const [cookiesUserID, setCookieUserID] = useCookies(['user_id']);
-    const [cookiesUserRol, setCookieUserRol] = useCookies(['user_rol']);*/
     const [cookies, setCookie] = useCookies(['access_token','user_id','user_rol']);
     
     const inOneHour = new Date(new Date().getTime() + ((60 * 60) * 1000));//one hour

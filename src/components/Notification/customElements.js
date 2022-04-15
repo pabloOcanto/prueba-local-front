@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import backgroundImg from '../../assets/loginBackground.jpg'
 
 export const Input = styled.input.attrs({
   placeHolderColor: "red"
@@ -45,12 +44,7 @@ export const Button = styled.button`
   color: white
 `;
 
-// export const Div = styled.div`
-//     padding: 2em;
-//     border: 1px dotted #000000;
-//     border-color: #3581fc;
-    
-// `;
+
 export const Div = styled.div`
 border-color: #9F9F9F;
 border-radius: 5px;

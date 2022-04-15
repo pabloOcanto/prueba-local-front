@@ -11,10 +11,8 @@ import { CgMenuGridR } from "react-icons/cg";
 import { FaUserAlt } from 'react-icons/fa';
 import { useCookies } from 'react-cookie';
 import { confirm } from "react-confirm-box";
-import context from '../../context/Context';
-import logout from '../../context/AuthProvider'
 import './Navbar.css';
-import AuthProvider from '../../context/AuthProvider';
+
 
 const isMobile = window.innerWidth <= 1023;
 const data = {

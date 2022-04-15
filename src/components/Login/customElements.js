@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import user from '../../assets/user.png'
 
 export const Input = styled.input.attrs({
   placeholderTextColor: "red"

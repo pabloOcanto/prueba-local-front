@@ -1,6 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-import footerImg from '../../assets/footerImg.png'
 import alertaTitle from '../../assets/alertaTitle.png'
 import { MdOutlineNotificationAdd } from "react-icons/md";
 import { CgMenuGridR } from "react-icons/cg";
@@ -36,12 +34,8 @@ const index = () => {
                             <p className='m-0'>{data.lastName}</p>
                             <p className='m-0'>ssdsdfgsdfg</p>
                         </div>
-
-
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>

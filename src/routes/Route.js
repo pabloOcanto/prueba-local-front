@@ -23,8 +23,15 @@ function Routes() {
             <Redirect to="/" />
           }
           {!context.isLogged && <Route exact path="/" component={Login} />}
+
           {context.isLogged &&
             <Switch>
+
+              {true ?
+                <Route exact path="/" component={HomePage} />
+                :
+                <Redirect to="/" />
+              }
               {true ?
                 <Route exact path="/home" component={HomePage} />
                 :

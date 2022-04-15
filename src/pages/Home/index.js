@@ -1,11 +1,8 @@
 import React from 'react';
-import Menu from '../../components/SideBar'
 import Footer from '../../components/Footer'
-import Header from '../../components/Header'
 import Home from '../../components/Home'
 import styled from 'styled-components';
-import backgroundImg from '../../assets/loginBackground.jpg'
-import footerImg from '../../assets/footerImg.png'
+
 
 const Center = styled.div`
     margin-left:20%;
@@ -38,13 +35,10 @@ const Index = () => {
     return (
         <>
             <Div className='container-fluid pr-0 pl-0'>
-                {/* <Menu className='col-3' /> */}
-                {/* <Header /> */}
                 <ContentWrap>
                     <Center className='col-9'>
                         <Home />
                     </Center>
-
                 </ContentWrap>
                 <Footer />
             </Div>

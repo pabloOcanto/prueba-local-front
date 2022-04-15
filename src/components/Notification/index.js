@@ -1,34 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Button, Div, Error, Form_, Input, Label } from './customElements';
+import React, { useState, useEffect } from 'react';
+import { Button, Div, Form_, Input, Label } from './customElements';
 import Select from 'react-select';
 import LoadService from '../../service/LoadService';
 import NotifcationService from '../../service/NotificationService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useCookies } from 'react-cookie';
-
-/*let dummySave ={
-    "topic":"peligro",
-    "title":"Fuertes Precitaciones",
-    "locationdescription": "Plottier, Neuquen. 13/12/21 - 18:45",
-    "message":"La Ruta ede-sur advierte que por las proximas 48Hs no se podra brindar el servcio.Ante cualquier emergencia contactarse al 2284 450-2214",
-    "icon":"precipitaciones.png",
-    "area":[
-        {
-        "lat":"-40.156",
-        "lon":"-64.348",
-        "state":"Chubut",
-        "city":"Rawson"
-        },
-        {
-        "lat":"-40.156",
-        "lon":"-63.348",
-        "state":"Neuquen",
-        "city":"San Martin"
-        }
-    ],
-    "userCreatedId":1
-}*/
 
 const NotificationForm = (props, { isLogged, loguedUser }) => {
     let modelToSave = {
@@ -222,7 +199,7 @@ const NotificationForm = (props, { isLogged, loguedUser }) => {
                                 isMulti
                                 options={cities}
                                 onChange={e => { handleChangeSelectArea(e, "area") }}
-                                getOptionLabel={(option) => option.city}
+                                getOptionLabel={(option) => option.city +","+ option.state}
                                 getOptionValue={(option) => option.id}
                             />
                         </div>
